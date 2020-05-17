@@ -6,6 +6,20 @@
 #         methods used in Jones et al., 2015 (https://doi.org/10.1021/acs.est.5b02426)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#Download data file here: https://alabama.box.com/s/6zice6t3cr0ielbuznv7pdz8mfzk4ovc
+
+#In this script, the first step is to create a stream network using standard
+#methods (i.e., Smooth DEM --> Flow direction --> flow accumulation --> reclassify 
+#based on a threshold). Then, we capture the elevation values along the stream 
+#network and interpolate those values accross the entire DEM. Essentially, this
+#creates a raster of 'nearest stream elevation' for any point in the raster. Finally, 
+#we estimate hand by subtracting the interpolated raster from the dem.  
+
+#Note, we utlize whitebox tools gis to run this script. To do this, you will need 
+#to write spatial data to a directory, then run the whitebox command. [Its actually 
+#running an executable outside of the R environment.]  Read whiteboxR documentation 
+#for more details.
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Step 1: Setup Workspace--------------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -116,13 +130,15 @@ IDW[IDW>100]<-NA
 hand<-dem_grd-IDW
 
 #Plot
-hand[hand<-5]<-NA
-hand[hand>30]<-NA
 mapview(hand)
 
-####################################################################################
-#Step 3: Estimate static inundation area
-####################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Step 4: Estimate static inundation area
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Below is old code I used to develop static estimates of stage and volume 
+#   relationships. I haven't integrated this into the code above, but feel free
+#   to check it out and use/adapt as you see fit. 
+
 # #Define max increase and step increase heights
 # zmax<-3
 # dz<-0.1
